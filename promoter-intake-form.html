@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promoter Sign Up - VenueLink</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            right: -50%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 0;
+        }
+
+        .progress-step:last-child::before {
+            display: none;
+        }
+
+        .progress-step.active::before,
+        .progress-step.completed::before {
+            background: white;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step.active .progress-circle {
+            background: white;
+            border-color: white;
+            color: #f5576c;
+        }
+
+        .progress-step.completed .progress-circle {
+            background: white;
+            border-color: white;
+            color: #10b981;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .progress-step.active .progress-label {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .step-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .helper-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+
+        .file-upload-area:hover {
+            border-color: #f5576c;
+            background: #fff5f5;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #f5576c;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #e04556;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 0.875rem 1.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .stat-input-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-input label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .stat-input input {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Join VenueLink</h1>
+            <p>Let's set up your promoter profile and start booking shows</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">
+                    <div class="progress-circle">1</div>
+                    <div class="progress-label">Basic Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="progress-circle">2</div>
+                    <div class="progress-label">Your Events</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="progress-circle">3</div>
+                    <div class="progress-label">Audience & Reach</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="progress-circle">4</div>
+                    <div class="progress-label">Media & Finish</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <!-- Step 1: Basic Info -->
+            <div class="step-content active" data-step="1">
+                <h2 class="step-title">Basic Information</h2>
+                <p class="step-description">Tell us about your event group or promotion company.</p>
+
+                <div class="form-group">
+                    <label>Promoter/Group Name <span class="required">*</span></label>
+                    <input type="text" placeholder="e.g., Brooklyn Bass Collective" required>
+                    <div class="helper-text">This is how venues will see you</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name <span class="required">*</span></label>
+                        <input type="text" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Title/Role <span class="required">*</span></label>
+                        <input type="text" placeholder="e.g., Founder, Booking Manager" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" placeholder="you@yourgroup.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number <span class="required">*</span></label>
+                        <input type="tel" placeholder="(555) 123-4567" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Based In (City) <span class="required">*</span></label>
+                        <input type="text" placeholder="e.g., Brooklyn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State <span class="required">*</span></label>
+                        <select required>
+                            <option value="">Select state</option>
+                            <option value="NY">New York</option>
+                            <option value="CA">California</option>
+                            <option value="IL">Illinois</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Website or Landing Page</label>
+                    <input type="url" placeholder="https://yourgroup.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Year Founded <span class="required">*</span></label>
+                    <select required>
+                        <option value="">Select year</option>
+                        <option value="2026">2026 (Just starting!)</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="older">Before 2020</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>About Your Group <span class="required">*</span></label>
+                    <textarea placeholder="Tell venues about your mission, what makes your events special, your community, and what you're looking for in venue partnerships..." required></textarea>
+                    <div class="helper-text">This is your elevator pitch to venues. Make it compelling!</div>
+                </div>
+            </div>
+
+            <!-- Step 2: Your Events -->
+            <div class="step-content" data-step="2">
+                <h2 class="step-title">Your Events</h2>
+                <p class="step-description">Help venues understand the type of events you produce.</p>
+
+                <div class="form-group">
+                    <label>Primary Music Genre(s) <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="house" value="house">
+                            <label for="house">House</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="techno" value="techno">
+                            <label for="techno">Techno</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="deep-house" value="deep-house">
+                            <label for="deep-house">Deep House</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tech-house" value="tech-house">
+                            <label for="tech-house">Tech House</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="hiphop" value="hiphop">
+                            <label for="hiphop">Hip-Hop</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rock" value="rock">
+                            <label for="rock">Rock</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="indie" value="indie">
+                            <label for="indie">Indie</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="other-genre" value="other">
+                            <label for="other-genre">Other</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Typical Capacity Needed <span class="required">*</span></label>
+                        <select required>
+                            <option value="">Select range</option>
+                            <option value="50-100">50-100 people</option>
+                            <option value="100-200">100-200 people</option>
+                            <option value="200-300">200-300 people</option>
+                            <option value="300-500">300-500 people</option>
+                            <option value="500+">500+ people</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Typical Ticket Price Range</label>
+                        <input type="text" placeholder="e.g., $15-25 or Free">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Events Per Month <span class="required">*</span></label>
+                        <select required>
+                            <option value="">Select frequency</option>
+                            <option value="1">1 event/month</option>
+                            <option value="2">2 events/month</option>
+                            <option value="3-4">3-4 events/month</option>
+                            <option value="5+">5+ events/month</option>
+                            <option value="varies">Varies</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Events Hosted <span class="required">*</span></label>
+                        <input type="number" placeholder="e.g., 52" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Event Days</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mon" value="monday">
+                            <label for="mon">Monday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tue" value="tuesday">
+                            <label for="tue">Tuesday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="wed" value="wednesday">
+                            <label for="wed">Wednesday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="thu" value="thursday">
+                            <label for="thu">Thursday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fri" value="friday" checked>
+                            <label for="fri">Friday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sat" value="saturday" checked>
+                            <label for="sat">Saturday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sun" value="sunday">
+                            <label for="sun">Sunday</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notable Artists You've Booked</label>
+                    <textarea placeholder="List any well-known DJs, bands, or performers you've worked with"></textarea>
+                    <div class="helper-text">This helps venues understand the caliber of talent you bring</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Past Event Examples <span class="required">*</span></label>
+                    <textarea placeholder="Describe 2-3 successful past events with attendance numbers, venue names, and what made them successful..." required></textarea>
+                </div>
+            </div>
+
+            <!-- Step 3: Audience & Reach -->
+            <div class="step-content" data-step="3">
+                <h2 class="step-title">Audience & Marketing Reach</h2>
+                <p class="step-description">Show venues you can bring a crowd and promote effectively.</p>
+
+                <div class="stat-input-group">
+                    <div class="stat-input">
+                        <label>Instagram Followers</label>
+                        <input type="number" placeholder="e.g., 8500">
+                    </div>
+                    <div class="stat-input">
+                        <label>Facebook Followers</label>
+                        <input type="number" placeholder="e.g., 3200">
+                    </div>
+                    <div class="stat-input">
+                        <label>Email List Size</label>
+                        <input type="number" placeholder="e.g., 12000">
+                    </div>
+                    <div class="stat-input">
+                        <label>Avg Event Attendance <span class="required">*</span></label>
+                        <input type="number" placeholder="e.g., 350" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Marketing Strategy <span class="required">*</span></label>
+                    <textarea placeholder="How do you promote your events? (Social media, email campaigns, influencer partnerships, paid ads, street teams, etc.)" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Typical Audience Demographics</label>
+                    <textarea placeholder="Describe your typical crowd: age range, interests, vibe, etc."></textarea>
+                    <div class="helper-text">This helps venues ensure you're a good fit for their space</div>
+                </div>
+
+                <div class="form-group">
+                    <label>What Makes Your Events Special? <span class="required">*</span></label>
+                    <textarea placeholder="What's your unique value proposition? What keeps people coming back to your events?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Team Size</label>
+                    <select>
+                        <option value="">Select option</option>
+                        <option value="solo">Just me</option>
+                        <option value="2-3">2-3 people</option>
+                        <option value="4-6">4-6 people</option>
+                        <option value="7-10">7-10 people</option>
+                        <option value="10+">10+ people</option>
+                    </select>
+                    <div class="helper-text">How many people help organize and run your events?</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you have in-house production capabilities?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sound-eng" value="sound">
+                            <label for="sound-eng">Sound Engineer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lighting" value="lighting">
+                            <label for="lighting">Lighting Tech</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="graphic-design" value="design">
+                            <label for="graphic-design">Graphic Designer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="video" value="video">
+                            <label for="video">Videographer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="photographer" value="photo">
+                            <label for="photographer">Photographer</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Media & Finish -->
+            <div class="step-content" data-step="4">
+                <h2 class="step-title">Media & Links</h2>
+                <p class="step-description">Upload photos and link to your work so venues can see what you do.</p>
+
+                <div class="form-group">
+                    <label>Event Photos <span class="required">*</span></label>
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">📸</div>
+                        <p><strong>Upload photos from past events</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">Show the crowd, the vibe, the energy (3-10 photos, PNG/JPG up to 5MB each)</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Logo or Profile Image</label>
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">🎨</div>
+                        <p><strong>Upload your logo or group photo</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">Square format recommended (PNG or JPG)</p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Instagram Handle <span class="required">*</span></label>
+                        <input type="text" placeholder="@yourgroup" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Page</label>
+                        <input type="url" placeholder="https://facebook.com/yourgroup">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>SoundCloud/Mixcloud</label>
+                        <input type="url" placeholder="Link to mixes or sets">
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube Channel</label>
+                        <input type="url" placeholder="https://youtube.com/@yourgroup">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Past Event Links</label>
+                    <textarea placeholder="Links to event pages, ticket sales, press coverage, or anything that shows your track record"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Looking For</label>
+                    <textarea placeholder="What type of venues are you looking for? Specific neighborhoods? Capacity range? Equipment needs? Let venues know!"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Information</label>
+                    <textarea placeholder="Anything else venues should know about you?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to VenueLink's Terms of Service and Privacy Policy, and I confirm that all information provided is accurate.</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" id="prevBtn" style="display: none;">← Previous</button>
+                <button class="btn btn-primary" id="nextBtn">Next Step →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateStep(step) {
+            // Update content
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector(`.step-content[data-step="${step}"]`).classList.add('active');
+
+            // Update progress
+            document.querySelectorAll('.progress-step').forEach((progressStep, index) => {
+                const stepNum = index + 1;
+                if (stepNum < step) {
+                    progressStep.classList.add('completed');
+                    progressStep.classList.remove('active');
+                    progressStep.querySelector('.progress-circle').innerHTML = '✓';
+                } else if (stepNum === step) {
+                    progressStep.classList.add('active');
+                    progressStep.classList.remove('completed');
+                    progressStep.querySelector('.progress-circle').innerHTML = stepNum;
+                } else {
+                    progressStep.classList.remove('active', 'completed');
+                    progressStep.querySelector('.progress-circle').innerHTML = stepNum;
+                }
+            });
+
+            // Update buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = step === 1 ? 'none' : 'block';
+            nextBtn.textContent = step === totalSteps ? 'Create Promoter Profile 🎉' : 'Next Step →';
+
+            currentStep = step;
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                updateStep(currentStep + 1);
+            } else {
+                alert('Promoter profile created! Redirecting to buy credits and start applying...');
+                // In real app: submit form and redirect
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentStep > 1) {
+                updateStep(currentStep - 1);
+            }
+        });
+    </script>
+</body>
+</html>

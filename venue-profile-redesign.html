@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Basement NYC - Venue Profile | VenueLink</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-bg: #121212;
+            --dark-card: #1a1a1a;
+            --blue-dark: #0f172a;
+            --blue-mid: #1e3a8a;
+            --yellow: #fbbf24;
+            --yellow-bright: #fcd34d;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border: #27272a;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        .nav {
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.05em;
+            text-decoration: none;
+        }
+
+        .btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--yellow-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+            padding: 4rem 5% 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 60%);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .venue-header {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .venue-logo {
+            width: 120px;
+            height: 120px;
+            background: var(--yellow);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--black);
+            flex-shrink: 0;
+        }
+
+        .venue-info h1 {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.03em;
+        }
+
+        .venue-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .verified-badge {
+            background: var(--success);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .tag {
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--yellow);
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .sticky-apply {
+            position: sticky;
+            top: 100px;
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .apply-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--yellow);
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .apply-details {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .stats-box {
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--yellow);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+            padding-bottom: 4rem;
+        }
+
+        .section {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .about-text {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .gallery-image {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-dark) 100%);
+            border-radius: 12px;
+        }
+
+        .gallery-image:first-child {
+            grid-column: 1 / -1;
+            aspect-ratio: 2/1;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .spec-item {
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 12px;
+        }
+
+        .spec-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .spec-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .equipment-section {
+            margin-top: 2rem;
+        }
+
+        .equipment-category {
+            margin-bottom: 2rem;
+        }
+
+        .equipment-category h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--yellow);
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .equipment-item {
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .equipment-icon {
+            font-size: 1.5rem;
+        }
+
+        .calendar-widget {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-month {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .calendar-nav button {
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+        }
+
+        .calendar-day.header {
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: default;
+            background: transparent;
+            border: none;
+        }
+
+        .calendar-day.available {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.3);
+            color: var(--yellow);
+            font-weight: 600;
+        }
+
+        .calendar-day.available:hover {
+            background: rgba(251, 191, 36, 0.2);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.booked {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.inactive {
+            color: #52525b;
+        }
+
+        .past-events {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .event-card {
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .event-image {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-dark) 100%);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .event-details h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1200px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sticky-apply {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="landing-redesign.html" class="logo">VenueLink</a>
+            <div style="display: flex; gap: 1rem;">
+                <a href="marketplace-redesign.html" class="btn btn-outline">← Back to Browse</a>
+                <a href="dashboard-redesign.html" class="btn btn-primary">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <div>
+                <div class="venue-header">
+                    <div class="venue-logo">TB</div>
+                    <div class="venue-info">
+                        <h1>The Basement NYC</h1>
+                        <div class="venue-meta">
+                            <span>📍 Bushwick, Brooklyn</span>
+                            <span>⭐ 4.8 (127 reviews)</span>
+                        </div>
+                        <div class="verified-badge">✓ Verified Venue</div>
+                        <div class="tags">
+                            <span class="tag">House Music</span>
+                            <span class="tag">Techno</span>
+                            <span class="tag">Late Night</span>
+                            <span class="tag">Full Bar</span>
+                            <span class="tag">CDJ-3000s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sticky-apply">
+                <div class="apply-price">$3</div>
+                <div class="apply-details">
+                    Guaranteed response within 7 days or full refund
+                </div>
+                <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                    Apply to Book
+                </button>
+                <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                    Save Venue
+                </button>
+
+                <div class="stats-box">
+                    <div class="stat-row">
+                        <span class="stat-label">Response Rate</span>
+                        <span class="stat-value">94%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Avg Response Time</span>
+                        <span class="stat-value">2.3 days</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Events Booked</span>
+                        <span class="stat-value">47</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Promoter Rating</span>
+                        <span class="stat-value">4.8★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-grid">
+            <div>
+                <div class="section">
+                    <h2>About The Venue</h2>
+                    <p class="about-text">
+                        The Basement has been Brooklyn's premier underground house music venue since 2018. Located in the heart of Bushwick, we've built our reputation on showcasing both emerging local talent and internationally recognized DJs in an intimate, high-energy setting.
+                        <br><br>
+                        Our state-of-the-art Funktion-One sound system and custom-designed acoustics create an immersive experience that keeps dancers coming back week after week. We pride ourselves on fostering a diverse, inclusive community where the music and the vibe are always the priority.
+                        <br><br>
+                        We're looking for promoters who understand underground dance music culture and can bring authentic energy to our space. Ideal events run from 10 PM to 4 AM on Fridays and Saturdays, with capacity for 300 people.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h2>Venue Photos</h2>
+                    <div class="image-gallery">
+                        <div class="gallery-image"></div>
+                        <div class="gallery-image"></div>
+                        <div class="gallery-image"></div>
+                        <div class="gallery-image"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Venue Specifications</h2>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <div class="spec-label">Capacity</div>
+                            <div class="spec-value">300 people</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Square Footage</div>
+                            <div class="spec-value">4,500 sq ft</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Stage Size</div>
+                            <div class="spec-value">12' x 8'</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Load-In</div>
+                            <div class="spec-value">Street Level</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Operating Hours</div>
+                            <div class="spec-value">10 PM - 4 AM</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Parking</div>
+                            <div class="spec-value">Free Street</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Equipment & Amenities</h2>
+                    
+                    <div class="equipment-section">
+                        <div class="equipment-category">
+                            <h3>🔊 Sound System</h3>
+                            <div class="equipment-grid">
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🔊</div>
+                                    <div>
+                                        <strong>Main Speakers</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Funktion-One Resolution 4</span>
+                                    </div>
+                                </div>
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">📢</div>
+                                    <div>
+                                        <strong>Subwoofers</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Dual 18" Subs (x4)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="equipment-category">
+                            <h3>🎛️ DJ Equipment</h3>
+                            <div class="equipment-grid">
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🎚️</div>
+                                    <div>
+                                        <strong>CDJ Players</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Pioneer CDJ-3000 (x2)</span>
+                                    </div>
+                                </div>
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🎛️</div>
+                                    <div>
+                                        <strong>Mixer</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Pioneer DJM-V10</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="equipment-category">
+                            <h3>💡 Lighting & Visual</h3>
+                            <div class="equipment-grid">
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">💡</div>
+                                    <div>
+                                        <strong>Lighting System</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">LED system + Lasers</span>
+                                    </div>
+                                </div>
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🌫️</div>
+                                    <div>
+                                        <strong>Effects</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Haze machine</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="equipment-category">
+                            <h3>🏢 Amenities</h3>
+                            <div class="equipment-grid">
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🍺</div>
+                                    <div>
+                                        <strong>Full Bar</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Licensed until 4 AM</span>
+                                    </div>
+                                </div>
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">👮</div>
+                                    <div>
+                                        <strong>Security</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">4-6 staff provided</span>
+                                    </div>
+                                </div>
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🎥</div>
+                                    <div>
+                                        <strong>Recording</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Livestream available</span>
+                                    </div>
+                                </div>
+                                <div class="equipment-item">
+                                    <div class="equipment-icon">🧥</div>
+                                    <div>
+                                        <strong>Coat Check</strong><br>
+                                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Available</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Past Events</h2>
+                    <div class="past-events">
+                        <div class="event-card">
+                            <div class="event-image"></div>
+                            <div class="event-details">
+                                <h3>Deep House Saturdays with DJ Koze</h3>
+                                <div class="event-meta">
+                                    January 15, 2026 • 285 attendees • Sold Out<br>
+                                    Promoter: Brooklyn Bass Collective
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-card">
+                            <div class="event-image"></div>
+                            <div class="event-details">
+                                <h3>Minimal Monday ft. Ricardo Villalobos</h3>
+                                <div class="event-meta">
+                                    January 8, 2026 • 300 attendees • Sold Out<br>
+                                    Promoter: Resident Advisor
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-card">
+                            <div class="event-image"></div>
+                            <div class="event-details">
+                                <h3>NYE Marathon: 10 Hours Deep</h3>
+                                <div class="event-meta">
+                                    December 31, 2025 • 300 attendees • Sold Out<br>
+                                    Promoter: The Basement Crew
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="calendar-widget">
+                    <div class="calendar-header">
+                        <div class="calendar-month">February 2026</div>
+                        <div class="calendar-nav">
+                            <button>←</button>
+                            <button>→</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid">
+                        <div class="calendar-day header">Su</div>
+                        <div class="calendar-day header">Mo</div>
+                        <div class="calendar-day header">Tu</div>
+                        <div class="calendar-day header">We</div>
+                        <div class="calendar-day header">Th</div>
+                        <div class="calendar-day header">Fr</div>
+                        <div class="calendar-day header">Sa</div>
+                        
+                        <div class="calendar-day inactive">1</div>
+                        <div class="calendar-day inactive">2</div>
+                        <div class="calendar-day inactive">3</div>
+                        <div class="calendar-day booked">4</div>
+                        <div class="calendar-day available">5</div>
+                        <div class="calendar-day available">6</div>
+                        <div class="calendar-day available">7</div>
+                        
+                        <div class="calendar-day available">8</div>
+                        <div class="calendar-day available">9</div>
+                        <div class="calendar-day available">10</div>
+                        <div class="calendar-day available">11</div>
+                        <div class="calendar-day available">12</div>
+                        <div class="calendar-day available">13</div>
+                        <div class="calendar-day booked">14</div>
+                        
+                        <div class="calendar-day available">15</div>
+                        <div class="calendar-day available">16</div>
+                        <div class="calendar-day available">17</div>
+                        <div class="calendar-day available">18</div>
+                        <div class="calendar-day available">19</div>
+                        <div class="calendar-day available">20</div>
+                        <div class="calendar-day booked">21</div>
+                        
+                        <div class="calendar-day available">22</div>
+                        <div class="calendar-day available">23</div>
+                        <div class="calendar-day available">24</div>
+                        <div class="calendar-day available">25</div>
+                        <div class="calendar-day available">26</div>
+                        <div class="calendar-day available">27</div>
+                        <div class="calendar-day booked">28</div>
+                    </div>
+
+                    <div style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 1.5rem; font-size: 0.85rem;">
+                        <span><span style="display: inline-block; width: 16px; height: 16px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 4px; margin-right: 0.5rem; vertical-align: middle;"></span>Available</span>
+                        <span><span style="display: inline-block; width: 16px; height: 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 4px; margin-right: 0.5rem; vertical-align: middle;"></span>Booked</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

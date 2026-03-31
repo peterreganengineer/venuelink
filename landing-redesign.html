@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VenueLink - Book Shows Seamlessly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-bg: #121212;
+            --dark-card: #1a1a1a;
+            --blue-dark: #0f172a;
+            --blue-mid: #1e3a8a;
+            --blue-light: #2563eb;
+            --yellow: #fbbf24;
+            --yellow-bright: #fcd34d;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border: #27272a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--black);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--yellow);
+        }
+
+        .btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--yellow-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 50%, var(--black) 100%);
+            padding: 8rem 5% 10rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.04em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .hero .btn {
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--dark-bg);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 5%;
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 8rem 5%;
+            background: var(--black);
+        }
+
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.04em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--yellow);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Top Venues Section (Groover-style) */
+        .top-venues {
+            padding: 8rem 5%;
+            background: linear-gradient(180deg, var(--black) 0%, var(--blue-dark) 100%);
+        }
+
+        .venues-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .venues-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .view-all-link {
+            color: var(--yellow);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .venue-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .venue-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .venue-card:hover {
+            border-color: var(--yellow);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .venue-image {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-dark) 100%);
+            position: relative;
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .venue-content {
+            padding: 1.75rem;
+        }
+
+        .venue-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .venue-location {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .venue-match {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .match-label {
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .venue-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--yellow);
+            padding: 0.35rem 0.85rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .venue-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .stars {
+            color: var(--yellow);
+        }
+
+        .apply-btn {
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .apply-btn:hover {
+            background: var(--yellow-bright);
+            transform: translateY(-2px);
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 8rem 5%;
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--black) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-bg);
+            border-top: 1px solid var(--border);
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--yellow);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .feature-grid,
+            .venue-cards,
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="logo">VenueLink</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#venues">Browse Venues</a>
+                <a href="#pricing">Pricing</a>
+                <a href="marketplace.html" class="btn btn-outline">Explore</a>
+                <a href="#" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-container">
+            <h1>
+                Stop Chasing Emails.<br>
+                <span class="highlight">Start Booking Shows.</span>
+            </h1>
+            <p>
+                The first platform built for venues and promoters to connect, book, and collaborate seamlessly. 
+                No more ghosted emails or scheduling nightmares.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">I'm a Venue</a>
+                <a href="#" class="btn btn-outline">I'm a Promoter</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Active Venues</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">2,000+</div>
+                <div class="stat-label">Promoters</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">15K+</div>
+                <div class="stat-label">Shows Booked</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">94%</div>
+                <div class="stat-label">Response Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="features" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Everything You Need to Book Better Shows</h2>
+                <p class="section-subtitle">Built by promoters and venue managers who know the struggle</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Availability</h3>
+                    <p>See open dates instantly. No more back-and-forth emails asking "are you free on the 15th?" Sync your calendar once and let it work for you.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✓</div>
+                    <h3>Guaranteed Responses</h3>
+                    <p>Every application gets reviewed within 7 days, or we refund your credits. No more shouting into the void wondering if anyone saw your pitch.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Matching</h3>
+                    <p>Filter by capacity, equipment, music style, crowd demographics, and more. Only apply to venues that actually fit your vibe.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Rich Profiles</h3>
+                    <p>Showcase your past events, typical turnout, sound system specs, or crowd photos. Make informed decisions before you even send a message.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Collaborative Tools</h3>
+                    <p>Link with co-promoters, track application status in real-time, and manage multiple events from one dashboard.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Verified Profiles</h3>
+                    <p>Know you're dealing with legitimate venues and serious promoters. Our verification process keeps the quality high on both sides.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="top-venues" id="venues">
+        <div class="section-container">
+            <div class="venues-header">
+                <h2>Top Venues For You</h2>
+                <a href="marketplace.html" class="view-all-link">View all venues →</a>
+            </div>
+
+            <div class="venue-cards">
+                <div class="venue-card" onclick="window.location.href='venue-profile.html'">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">The Basement NYC</h3>
+                        <div class="venue-location">📍 Bushwick, Brooklyn</div>
+                        
+                        <div class="venue-match">
+                            <div class="match-label">Perfect match based on:</div>
+                            <div>House music • 300 capacity • Late night</div>
+                        </div>
+
+                        <div class="venue-tags">
+                            <span class="tag">House</span>
+                            <span class="tag">Techno</span>
+                            <span class="tag">CDJ-3000s</span>
+                            <span class="tag">Full Bar</span>
+                        </div>
+
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.8 (127)</span>
+                            </div>
+                            <button class="apply-btn">Apply - $3</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">Warehouse 21</h3>
+                        <div class="venue-location">📍 Williamsburg, Brooklyn</div>
+                        
+                        <div class="venue-match">
+                            <div class="match-label">Perfect match based on:</div>
+                            <div>Techno events • 450 capacity • Industrial space</div>
+                        </div>
+
+                        <div class="venue-tags">
+                            <span class="tag">Techno</span>
+                            <span class="tag">Industrial</span>
+                            <span class="tag">Laser System</span>
+                            <span class="tag">Outdoor</span>
+                        </div>
+
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.9 (203)</span>
+                            </div>
+                            <button class="apply-btn">Apply - $3</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">Electric Garden</h3>
+                        <div class="venue-location">📍 Astoria, Queens</div>
+                        
+                        <div class="venue-match">
+                            <div class="match-label">Perfect match based on:</div>
+                            <div>Disco nights • 350 capacity • Outdoor patio</div>
+                        </div>
+
+                        <div class="venue-tags">
+                            <span class="tag">House</span>
+                            <span class="tag">Disco</span>
+                            <span class="tag">Garden</span>
+                            <span class="tag">Kitchen</span>
+                        </div>
+
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.9 (156)</span>
+                            </div>
+                            <button class="apply-btn">Apply - $3</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Fill Your Calendar?</h2>
+            <p>Join hundreds of venues and promoters already booking smarter</p>
+            <a href="#" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Get Started Free</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Help Center</a>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 VenueLink. Built for the culture, by the culture.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

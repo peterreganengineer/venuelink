@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Venues - VenueLink</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-bg: #121212;
+            --dark-card: #1a1a1a;
+            --blue-dark: #0f172a;
+            --blue-mid: #1e3a8a;
+            --blue-light: #2563eb;
+            --yellow: #fbbf24;
+            --yellow-bright: #fcd34d;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border: #27272a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.05em;
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--yellow-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        /* Hero Search */
+        .hero-search {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+            padding: 4rem 5% 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-search::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-container h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.04em;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .search-container p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+        }
+
+        .search-box {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--yellow);
+        }
+
+        .search-box button {
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0.875rem 2.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .search-box button:hover {
+            background: var(--yellow-bright);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 5%;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+        }
+
+        /* Filters Sidebar */
+        .filters-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .filter-section {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-section h3 {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.02em;
+            font-weight: 600;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--yellow);
+        }
+
+        .filter-option label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .filter-option .count {
+            color: #52525b;
+            font-size: 0.875rem;
+        }
+
+        .range-slider {
+            width: 100%;
+            margin: 1rem 0;
+            accent-color: var(--yellow);
+        }
+
+        .range-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .clear-filters {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .clear-filters:hover {
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        /* Results Area */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.03em;
+        }
+
+        .sort-dropdown {
+            padding: 0.75rem 1.25rem;
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sort-dropdown:focus {
+            outline: none;
+            border-color: var(--yellow);
+        }
+
+        /* Venue Grid */
+        .venue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+
+        .venue-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .venue-card:hover {
+            border-color: var(--yellow);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.2);
+        }
+
+        .venue-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-dark) 100%);
+            position: relative;
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quick-stats {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .stat-badge {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 0.4rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .venue-content {
+            padding: 1.75rem;
+        }
+
+        .venue-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .venue-location {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .venue-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--yellow);
+            padding: 0.35rem 0.85rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .venue-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+        }
+
+        .venue-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(251, 191, 36, 0.05);
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .spec {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .spec strong {
+            color: var(--text-primary);
+        }
+
+        .venue-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .stars {
+            color: var(--yellow);
+        }
+
+        .apply-price {
+            font-weight: 700;
+            color: var(--yellow);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        @media (max-width: 968px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-sidebar {
+                position: static;
+            }
+
+            .venue-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="landing-redesign.html" class="logo">VenueLink</a>
+            <div class="nav-actions">
+                <a href="#" class="btn btn-outline">Dashboard</a>
+                <a href="#" class="btn btn-primary">List Your Venue</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-search">
+        <div class="search-container">
+            <h1>Find Your Perfect Venue</h1>
+            <p>Browse hundreds of verified venues ready to book your next show</p>
+            <div class="search-box">
+                <input type="text" placeholder="Search by venue name, neighborhood, or genre...">
+                <button>Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside class="filters-sidebar">
+            <div class="filter-section">
+                <h3>Location</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="brooklyn">
+                    <label for="brooklyn">Brooklyn</label>
+                    <span class="count">47</span>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="manhattan">
+                    <label for="manhattan">Manhattan</label>
+                    <span class="count">32</span>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="queens">
+                    <label for="queens">Queens</label>
+                    <span class="count">18</span>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="bronx">
+                    <label for="bronx">Bronx</label>
+                    <span class="count">9</span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Capacity</h3>
+                <input type="range" min="50" max="1000" value="500" class="range-slider">
+                <div class="range-values">
+                    <span>50</span>
+                    <span>1000+</span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Music Genre</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="house-filter">
+                    <label for="house-filter">House</label>
+                    <span class="count">42</span>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="techno-filter">
+                    <label for="techno-filter">Techno</label>
+                    <span class="count">38</span>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="hiphop-filter">
+                    <label for="hiphop-filter">Hip-Hop</label>
+                    <span class="count">29</span>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="rock-filter">
+                    <label for="rock-filter">Rock/Indie</label>
+                    <span class="count">25</span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Equipment</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="cdj-filter">
+                    <label for="cdj-filter">CDJ-3000s</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="sound-filter">
+                    <label for="sound-filter">Pro Sound System</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="bar-filter">
+                    <label for="bar-filter">Full Bar</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="security-filter">
+                    <label for="security-filter">Security Staff</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Availability</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="available-filter">
+                    <label for="available-filter">Available This Month</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="weekends-filter">
+                    <label for="weekends-filter">Weekend Availability</label>
+                </div>
+            </div>
+
+            <button class="clear-filters">Clear All Filters</button>
+        </aside>
+
+        <main>
+            <div class="results-header">
+                <div class="results-count">106 venues found</div>
+                <select class="sort-dropdown">
+                    <option>Sort by: Recommended</option>
+                    <option>Highest Rated</option>
+                    <option>Fastest Response</option>
+                    <option>Newest</option>
+                    <option>Capacity (Low to High)</option>
+                    <option>Capacity (High to Low)</option>
+                </select>
+            </div>
+
+            <div class="venue-grid">
+                <!-- Venue Card 1 -->
+                <div class="venue-card" onclick="window.location.href='venue-profile.html'">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                        <div class="quick-stats">
+                            <div class="stat-badge">300 capacity</div>
+                            <div class="stat-badge">94% response</div>
+                        </div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">The Basement NYC</h3>
+                        <div class="venue-location">📍 Bushwick, Brooklyn</div>
+                        <div class="venue-tags">
+                            <span class="tag">House</span>
+                            <span class="tag">Techno</span>
+                            <span class="tag">Late Night</span>
+                        </div>
+                        <p class="venue-description">
+                            Brooklyn's premier underground house music venue with state-of-the-art Funktion-One sound system and intimate dance floor.
+                        </p>
+                        <div class="venue-specs">
+                            <div class="spec">🎛️ <strong>CDJ-3000s</strong></div>
+                            <div class="spec">🍺 <strong>Full Bar</strong></div>
+                            <div class="spec">⏰ <strong>10PM-4AM</strong></div>
+                            <div class="spec">👮 <strong>Security</strong></div>
+                        </div>
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.8 (127)</span>
+                            </div>
+                            <div class="apply-price">$3 to apply</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venue Card 2 -->
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                        <div class="quick-stats">
+                            <div class="stat-badge">450 capacity</div>
+                            <div class="stat-badge">91% response</div>
+                        </div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">Warehouse 21</h3>
+                        <div class="venue-location">📍 Williamsburg, Brooklyn</div>
+                        <div class="venue-tags">
+                            <span class="tag">Techno</span>
+                            <span class="tag">Industrial</span>
+                            <span class="tag">Warehouse</span>
+                        </div>
+                        <p class="venue-description">
+                            Raw industrial space with cutting-edge sound and lighting. Perfect for underground techno and experimental electronic music.
+                        </p>
+                        <div class="venue-specs">
+                            <div class="spec">🔊 <strong>L-Acoustics</strong></div>
+                            <div class="spec">💡 <strong>Laser System</strong></div>
+                            <div class="spec">⏰ <strong>9PM-5AM</strong></div>
+                            <div class="spec">🌳 <strong>Outdoor Area</strong></div>
+                        </div>
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.9 (203)</span>
+                            </div>
+                            <div class="apply-price">$3 to apply</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venue Card 3 -->
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                        <div class="quick-stats">
+                            <div class="stat-badge">200 capacity</div>
+                            <div class="stat-badge">88% response</div>
+                        </div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">The Loft</h3>
+                        <div class="venue-location">📍 Lower East Side, Manhattan</div>
+                        <div class="venue-tags">
+                            <span class="tag">Deep House</span>
+                            <span class="tag">Jazz</span>
+                            <span class="tag">Intimate</span>
+                        </div>
+                        <p class="venue-description">
+                            Cozy loft space with warm acoustics, perfect for deep house, jazz, and intimate listening sessions.
+                        </p>
+                        <div class="venue-specs">
+                            <div class="spec">🎹 <strong>Piano Available</strong></div>
+                            <div class="spec">🍷 <strong>Wine Bar</strong></div>
+                            <div class="spec">⏰ <strong>8PM-2AM</strong></div>
+                            <div class="spec">🎥 <strong>Livestream</strong></div>
+                        </div>
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★☆</span>
+                                <span>4.7 (89)</span>
+                            </div>
+                            <div class="apply-price">$3 to apply</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venue Card 4 -->
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                        <div class="quick-stats">
+                            <div class="stat-badge">350 capacity</div>
+                            <div class="stat-badge">96% response</div>
+                        </div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">Electric Garden</h3>
+                        <div class="venue-location">📍 Astoria, Queens</div>
+                        <div class="venue-tags">
+                            <span class="tag">House</span>
+                            <span class="tag">Disco</span>
+                            <span class="tag">Outdoor</span>
+                        </div>
+                        <p class="venue-description">
+                            Unique indoor/outdoor venue with garden patio, retractable roof, and exceptional sound quality for house and disco nights.
+                        </p>
+                        <div class="venue-specs">
+                            <div class="spec">🌳 <strong>Garden Patio</strong></div>
+                            <div class="spec">🎛️ <strong>Pioneer Setup</strong></div>
+                            <div class="spec">⏰ <strong>9PM-4AM</strong></div>
+                            <div class="spec">🍽️ <strong>Kitchen</strong></div>
+                        </div>
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.9 (156)</span>
+                            </div>
+                            <div class="apply-price">$3 to apply</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venue Card 5 -->
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                        <div class="quick-stats">
+                            <div class="stat-badge">500 capacity</div>
+                            <div class="stat-badge">93% response</div>
+                        </div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">Brooklyn Steel (Indie)</h3>
+                        <div class="venue-location">📍 East Williamsburg, Brooklyn</div>
+                        <div class="venue-tags">
+                            <span class="tag">Rock</span>
+                            <span class="tag">Indie</span>
+                            <span class="tag">Live Bands</span>
+                        </div>
+                        <p class="venue-description">
+                            Premier live music venue with professional stage, green room, and top-tier production for rock, indie, and alternative acts.
+                        </p>
+                        <div class="venue-specs">
+                            <div class="spec">🎸 <strong>Backline</strong></div>
+                            <div class="spec">🚪 <strong>Green Room</strong></div>
+                            <div class="spec">⏰ <strong>7PM-12AM</strong></div>
+                            <div class="spec">📸 <strong>Photo Pit</strong></div>
+                        </div>
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span>4.8 (241)</span>
+                            </div>
+                            <div class="apply-price">$5 to apply</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Venue Card 6 -->
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <div class="verified-badge">✓ Verified</div>
+                        <div class="quick-stats">
+                            <div class="stat-badge">150 capacity</div>
+                            <div class="stat-badge">90% response</div>
+                        </div>
+                    </div>
+                    <div class="venue-content">
+                        <h3 class="venue-name">The Velvet Room</h3>
+                        <div class="venue-location">📍 SoHo, Manhattan</div>
+                        <div class="venue-tags">
+                            <span class="tag">Jazz</span>
+                            <span class="tag">Soul</span>
+                            <span class="tag">Upscale</span>
+                        </div>
+                        <p class="venue-description">
+                            Sophisticated lounge with exceptional acoustics, perfect for jazz, neo-soul, and acoustic performances in an upscale setting.
+                        </p>
+                        <div class="venue-specs">
+                            <div class="spec">🎹 <strong>Grand Piano</strong></div>
+                            <div class="spec">🍸 <strong>Cocktail Bar</strong></div>
+                            <div class="spec">⏰ <strong>7PM-1AM</strong></div>
+                            <div class="spec">🎭 <strong>Seated</strong></div>
+                        </div>
+                        <div class="venue-footer">
+                            <div class="rating">
+                                <span class="stars">★★★★☆</span>
+                                <span>4.6 (78)</span>
+                            </div>
+                            <div class="apply-price">$3 to apply</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue Sign Up - VenueLink</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            right: -50%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 0;
+        }
+
+        .progress-step:last-child::before {
+            display: none;
+        }
+
+        .progress-step.active::before,
+        .progress-step.completed::before {
+            background: white;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step.active .progress-circle {
+            background: white;
+            border-color: white;
+            color: #6366f1;
+        }
+
+        .progress-step.completed .progress-circle {
+            background: white;
+            border-color: white;
+            color: #10b981;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .progress-step.active .progress-label {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .step-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .helper-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+
+        .file-upload-area:hover {
+            border-color: #6366f1;
+            background: #f0f0ff;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 0.875rem 1.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .equipment-item:hover {
+            background: #f0f0ff;
+        }
+
+        .equipment-item input[type="checkbox"]:checked + .equipment-content {
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .equipment-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Welcome to VenueLink</h1>
+            <p>Let's get your venue set up in just a few minutes</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">
+                    <div class="progress-circle">1</div>
+                    <div class="progress-label">Basic Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="progress-circle">2</div>
+                    <div class="progress-label">Venue Details</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="progress-circle">3</div>
+                    <div class="progress-label">Equipment</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="progress-circle">4</div>
+                    <div class="progress-label">Media & Finish</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <!-- Step 1: Basic Info -->
+            <div class="step-content active" data-step="1">
+                <h2 class="step-title">Basic Information</h2>
+                <p class="step-description">Tell us about your venue so promoters can find and book you.</p>
+
+                <div class="form-group">
+                    <label>Venue Name <span class="required">*</span></label>
+                    <input type="text" placeholder="e.g., The Basement NYC" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Contact Name <span class="required">*</span></label>
+                        <input type="text" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Email <span class="required">*</span></label>
+                        <input type="email" placeholder="you@venue.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number <span class="required">*</span></label>
+                        <input type="tel" placeholder="(555) 123-4567" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="url" placeholder="https://yourvenue.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Street Address <span class="required">*</span></label>
+                    <input type="text" placeholder="123 Main Street" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City <span class="required">*</span></label>
+                        <input type="text" placeholder="Brooklyn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State <span class="required">*</span></label>
+                        <select required>
+                            <option value="">Select state</option>
+                            <option value="NY">New York</option>
+                            <option value="CA">California</option>
+                            <option value="IL">Illinois</option>
+                            <!-- Add more states -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ZIP Code <span class="required">*</span></label>
+                        <input type="text" placeholder="11211" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Neighborhood</label>
+                        <input type="text" placeholder="e.g., Bushwick">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Venue Details -->
+            <div class="step-content" data-step="2">
+                <h2 class="step-title">Venue Details</h2>
+                <p class="step-description">Help promoters understand your space and what makes it special.</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Capacity <span class="required">*</span></label>
+                        <input type="number" placeholder="e.g., 300" required>
+                        <div class="helper-text">Maximum number of people</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Square Footage</label>
+                        <input type="number" placeholder="e.g., 4500">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stage Size</label>
+                        <input type="text" placeholder="e.g., 12' x 8'">
+                    </div>
+                    <div class="form-group">
+                        <label>Load-In Type <span class="required">*</span></label>
+                        <select required>
+                            <option value="">Select option</option>
+                            <option value="street">Street Level</option>
+                            <option value="stairs">Stairs Required</option>
+                            <option value="elevator">Elevator Access</option>
+                            <option value="loading-dock">Loading Dock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Music Genres You Book <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="house" value="house">
+                            <label for="house">House</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="techno" value="techno">
+                            <label for="techno">Techno</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="hiphop" value="hiphop">
+                            <label for="hiphop">Hip-Hop</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rock" value="rock">
+                            <label for="rock">Rock</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="indie" value="indie">
+                            <label for="indie">Indie</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="jazz" value="jazz">
+                            <label for="jazz">Jazz</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="other" value="other">
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Typical Event Start Time</label>
+                        <input type="time" value="22:00">
+                    </div>
+                    <div class="form-group">
+                        <label>Typical Event End Time</label>
+                        <input type="time" value="04:00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Parking Options <span class="required">*</span></label>
+                    <select required>
+                        <option value="">Select option</option>
+                        <option value="street">Street Parking (Free)</option>
+                        <option value="paid-street">Street Parking (Metered)</option>
+                        <option value="lot">Parking Lot</option>
+                        <option value="garage">Parking Garage</option>
+                        <option value="none">No Parking</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>About Your Venue <span class="required">*</span></label>
+                    <textarea placeholder="Tell promoters about your venue's history, vibe, ideal events, what makes you special..." required></textarea>
+                    <div class="helper-text">This is your chance to attract the right promoters. Be descriptive!</div>
+                </div>
+            </div>
+
+            <!-- Step 3: Equipment & Technical Specs -->
+            <div class="step-content" data-step="3">
+                <h2 class="step-title">Equipment & Technical Specifications</h2>
+                <p class="step-description">Provide detailed technical specs so promoters know exactly what you offer.</p>
+
+                <!-- SOUND SYSTEM -->
+                <div style="background: #f9fafb; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">🔊 Sound System</h3>
+                    
+                    <div class="form-group">
+                        <label>Main Speaker Brand/Model <span class="required">*</span></label>
+                        <select required>
+                            <option value="">Select brand</option>
+                            <option value="funktion-one">Funktion-One</option>
+                            <option value="l-acoustics">L-Acoustics</option>
+                            <option value="d&b">d&b audiotechnik</option>
+                            <option value="martin-audio">Martin Audio</option>
+                            <option value="meyer-sound">Meyer Sound</option>
+                            <option value="jbl">JBL Professional</option>
+                            <option value="qsc">QSC</option>
+                            <option value="mackie">Mackie</option>
+                            <option value="yamaha">Yamaha</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Speaker Model/Details</label>
+                        <input type="text" placeholder="e.g., Resolution 4, KV2 Audio VHD5.0, etc.">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Subwoofers <span class="required">*</span></label>
+                            <select required>
+                                <option value="">Select option</option>
+                                <option value="dual-18">Dual 18" Subs</option>
+                                <option value="single-18">Single 18" Subs</option>
+                                <option value="dual-15">Dual 15" Subs</option>
+                                <option value="single-15">Single 15" Subs</option>
+                                <option value="none">No Subs</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Subs</label>
+                            <input type="number" placeholder="e.g., 4">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Max SPL (dB)</label>
+                            <input type="number" placeholder="e.g., 115">
+                            <div class="helper-text">Sound pressure level</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Acoustic Treatment</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="full">Full acoustic treatment</option>
+                                <option value="partial">Partial treatment</option>
+                                <option value="minimal">Minimal/None</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Monitor System</label>
+                        <input type="text" placeholder="e.g., 2x QSC K12.2 monitors, in-ear monitoring available">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mixing Console</label>
+                        <input type="text" placeholder="e.g., Allen & Heath SQ-7, Behringer X32">
+                    </div>
+                </div>
+
+                <!-- DJ EQUIPMENT -->
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">🎛️ DJ Equipment</h3>
+                    
+                    <div class="form-group">
+                        <label>CDJ Players Available</label>
+                        <select>
+                            <option value="">Select model</option>
+                            <option value="cdj-3000">Pioneer CDJ-3000 (Industry Standard)</option>
+                            <option value="cdj-2000nxs2">Pioneer CDJ-2000NXS2</option>
+                            <option value="cdj-900nxs2">Pioneer CDJ-900NXS2</option>
+                            <option value="xdj-1000mk2">Pioneer XDJ-1000MK2</option>
+                            <option value="denon-sc6000">Denon SC6000</option>
+                            <option value="none">No CDJs - BYO equipment</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Number of CDJ Players</label>
+                            <select>
+                                <option value="">Select quantity</option>
+                                <option value="2">2 Players</option>
+                                <option value="3">3 Players</option>
+                                <option value="4">4 Players</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Turntables Available</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="technics-1200">Technics 1200s</option>
+                                <option value="technics-1210">Technics 1210s</option>
+                                <option value="other-turntables">Other turntables</option>
+                                <option value="none">No turntables</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>DJ Mixer Model</label>
+                        <select>
+                            <option value="">Select mixer</option>
+                            <option value="djm-v10">Pioneer DJM-V10 (6-channel)</option>
+                            <option value="djm-a9">Pioneer DJM-A9 (4-channel)</option>
+                            <option value="djm-900nxs2">Pioneer DJM-900NXS2</option>
+                            <option value="djm-750mk2">Pioneer DJM-750MK2</option>
+                            <option value="allen-heath">Allen & Heath Xone Series</option>
+                            <option value="rane">Rane Mixer</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional DJ Equipment</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="rekordbox" value="rekordbox">
+                                <label for="rekordbox">Rekordbox USB compatible</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="serato" value="serato">
+                                <label for="serato">Serato compatible</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="traktor" value="traktor">
+                                <label for="traktor">Traktor compatible</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="needles" value="needles">
+                                <label for="needles">Extra needles/cartridges</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIGHTING SYSTEM -->
+                <div style="background: #e0e7ff; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">💡 Lighting & Visual Effects</h3>
+                    
+                    <div class="form-group">
+                        <label>Lighting System Type</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="moving-heads" value="moving-heads">
+                                <label for="moving-heads">Moving head fixtures</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="led-pars" value="led-pars">
+                                <label for="led-pars">LED PAR lights</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="wash-lights" value="wash-lights">
+                                <label for="wash-lights">Wash lights</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="lasers" value="lasers">
+                                <label for="lasers">Laser system</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="strobes" value="strobes">
+                                <label for="strobes">Strobe lights</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="haze" value="haze">
+                                <label for="haze">Haze/Fog machine</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>DMX Control</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="full-dmx">Full DMX control available</option>
+                                <option value="pre-programmed">Pre-programmed scenes only</option>
+                                <option value="basic">Basic on/off control</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Lighting Console</label>
+                            <input type="text" placeholder="e.g., MA Lighting, Chamsys MagicQ">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>LED Screen/Projection</label>
+                        <select>
+                            <option value="">Select option</option>
+                            <option value="led-wall">LED wall/screen</option>
+                            <option value="projector">Projector available</option>
+                            <option value="both">Both LED and projector</option>
+                            <option value="none">No video display</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Video System Details</label>
+                        <input type="text" placeholder="e.g., 4K projector, HDMI/SDI inputs, screen size 12' x 8'">
+                    </div>
+                </div>
+
+                <!-- STAGE & BACKLINE -->
+                <div style="background: #fce7f3; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">🎸 Stage & Backline Equipment</h3>
+                    
+                    <div class="form-group">
+                        <label>Live Band Equipment Available</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="drum-kit" value="drum-kit">
+                                <label for="drum-kit">Drum kit (full/partial)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="bass-amp" value="bass-amp">
+                                <label for="bass-amp">Bass amplifier</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="guitar-amp" value="guitar-amp">
+                                <label for="guitar-amp">Guitar amplifiers</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="keyboard" value="keyboard">
+                                <label for="keyboard">Keyboard/Piano</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="microphones" value="microphones">
+                                <label for="microphones">Microphones (SM58s, condensers)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mic-stands" value="mic-stands">
+                                <label for="mic-stands">Mic stands (quantity: ___)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Backline Details</label>
+                        <textarea placeholder="Specify equipment details: drum kit hardware, amp brands/models, keyboard models, etc."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cable Package</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="full">Full cable package (XLR, 1/4", RCA, etc.)</option>
+                                <option value="basic">Basic cables only</option>
+                                <option value="byo">Bring your own cables</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Power Distribution</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="dedicated">Dedicated stage power</option>
+                                <option value="standard">Standard outlets</option>
+                                <option value="limited">Limited power available</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TECHNICAL INFRASTRUCTURE -->
+                <div style="background: #d1fae5; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">⚡ Technical Infrastructure</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Available Power (Amps)</label>
+                            <input type="number" placeholder="e.g., 200">
+                            <div class="helper-text">Total amperage available</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phase</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="single">Single Phase</option>
+                                <option value="three">Three Phase</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ceiling Height</label>
+                            <input type="text" placeholder="e.g., 14 feet">
+                        </div>
+                        <div class="form-group">
+                            <label>Rigging Points</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="yes">Rigging points available</option>
+                                <option value="no">No rigging</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Internet/WiFi</label>
+                        <select>
+                            <option value="">Select option</option>
+                            <option value="fiber">Fiber optic (high-speed)</option>
+                            <option value="cable">Cable internet</option>
+                            <option value="basic">Basic WiFi</option>
+                            <option value="none">No internet</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Livestreaming Capabilities</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="multi-camera" value="multi-camera">
+                                <label for="multi-camera">Multi-camera setup</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="audio-feed" value="audio-feed">
+                                <label for="audio-feed">Direct audio feed for streaming</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="streaming-tech" value="streaming-tech">
+                                <label for="streaming-tech">Streaming technician available</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STAFF & SERVICES -->
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 12px;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">👥 Staff & Services Provided</h3>
+                    
+                    <div class="form-group">
+                        <label>Technical Staff Included</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sound-engineer" value="sound-engineer">
+                                <label for="sound-engineer">Sound engineer</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="lighting-tech" value="lighting-tech">
+                                <label for="lighting-tech">Lighting technician</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="stage-manager" value="stage-manager">
+                                <label for="stage-manager">Stage manager</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="video-tech" value="video-tech">
+                                <label for="video-tech">Video technician</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Security Staff Count</label>
+                            <input type="number" placeholder="e.g., 4">
+                        </div>
+                        <div class="form-group">
+                            <label>Bartenders Count</label>
+                            <input type="number" placeholder="e.g., 2">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Staff/Services</label>
+                        <textarea placeholder="e.g., door staff, coat check attendant, cleaning crew, production assistants, etc."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Media, Photos & Additional Details -->
+            <div class="step-content" data-step="4">
+                <h2 class="step-title">Media & Photos</h2>
+                <p class="step-description">Showcase your venue with high-quality photos and media. Great visuals = more bookings!</p>
+
+                <!-- MAIN VENUE PHOTOS -->
+                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 2px dashed #3b82f6;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #1e40af;">📸 Main Venue Photos <span class="required">*</span></h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Upload 5-15 high-quality photos of your empty venue. These are the first images promoters will see.</p>
+                    
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">🏛️</div>
+                        <p><strong>Upload Main Venue Photos</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                            Show: main room, dance floor, stage view, different angles<br>
+                            JPG/PNG • Max 10MB each • Minimum 5 photos required
+                        </p>
+                    </div>
+                    <div class="helper-text" style="margin-top: 1rem;">
+                        💡 <strong>Pro tip:</strong> Take photos during daytime with good lighting, show the space from multiple angles
+                    </div>
+                </div>
+
+                <!-- CROWD/EVENT PHOTOS -->
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">🎉 Event/Crowd Photos</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Show your venue in action! Upload 3-10 photos from past successful events.</p>
+                    
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">🕺</div>
+                        <p><strong>Upload Crowd/Event Photos</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                            Show: packed dance floor, energetic crowd, lighting in action, DJ booth during event<br>
+                            JPG/PNG • Max 10MB each
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STAGE & EQUIPMENT CLOSE-UPS -->
+                <div style="background: #e0e7ff; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">🎛️ Stage & Equipment Photos</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Close-up shots of DJ booth, stage setup, sound equipment, lighting rig.</p>
+                    
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">🎚️</div>
+                        <p><strong>Upload Equipment Photos</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                            Show: CDJ setup, mixer, speakers, stage, lighting system<br>
+                            JPG/PNG • Max 10MB each
+                        </p>
+                    </div>
+                </div>
+
+                <!-- BAR & AMENITIES -->
+                <div style="background: #fce7f3; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">🍺 Bar & Amenities Photos</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Show your bar, seating areas, green room, bathrooms, outdoor space.</p>
+                    
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">🏪</div>
+                        <p><strong>Upload Amenities Photos</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                            Show: bar setup, VIP area, green room, lounge, outdoor patio<br>
+                            JPG/PNG • Max 10MB each
+                        </p>
+                    </div>
+                </div>
+
+                <!-- EXTERIOR & ENTRANCE -->
+                <div style="background: #d1fae5; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">🚪 Exterior & Entrance Photos</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Help promoters and guests find your venue easily.</p>
+                    
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">🏢</div>
+                        <p><strong>Upload Exterior Photos</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                            Show: building exterior, entrance, signage, street view<br>
+                            JPG/PNG • Max 10MB each
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FLOOR PLAN -->
+                <div style="background: #f3f4f6; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">📐 Floor Plan</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Optional but highly recommended - helps promoters visualize the space.</p>
+                    
+                    <div class="file-upload-area">
+                        <div class="file-upload-icon">📋</div>
+                        <p><strong>Upload Floor Plan</strong></p>
+                        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                            PDF, JPG, or PNG • Max 10MB<br>
+                            Should show: stage location, bar, bathrooms, capacity zones, exits
+                        </p>
+                    </div>
+                </div>
+
+                <!-- VIDEO CONTENT -->
+                <div style="background: #fef2f2; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">🎥 Video Content</h3>
+                    
+                    <div class="form-group">
+                        <label>Venue Walkthrough Video (YouTube/Vimeo Link)</label>
+                        <input type="url" placeholder="https://youtube.com/watch?v=...">
+                        <div class="helper-text">A short video tour of your venue (1-3 minutes)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Event Highlight Reel (YouTube/Vimeo Link)</label>
+                        <input type="url" placeholder="https://youtube.com/watch?v=...">
+                        <div class="helper-text">Show your venue during an event - energy, crowd, production quality</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Virtual Tour Link (Matterport/360° Tour)</label>
+                        <input type="url" placeholder="https://my.matterport.com/...">
+                        <div class="helper-text">If you have a 3D/360° virtual tour</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Or Upload Video Files</label>
+                        <div class="file-upload-area">
+                            <div class="file-upload-icon">📹</div>
+                            <p><strong>Upload Video Files</strong></p>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                                MP4, MOV • Max 100MB • Keep under 3 minutes
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOCIAL MEDIA & ONLINE PRESENCE -->
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">📱 Social Media & Online Presence</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Instagram Handle</label>
+                            <input type="text" placeholder="@yourvenue">
+                        </div>
+                        <div class="form-group">
+                            <label>Facebook Page</label>
+                            <input type="url" placeholder="facebook.com/yourvenue">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>TikTok Handle</label>
+                            <input type="text" placeholder="@yourvenue">
+                        </div>
+                        <div class="form-group">
+                            <label>Twitter/X Handle</label>
+                            <input type="text" placeholder="@yourvenue">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Website Link</label>
+                        <input type="url" placeholder="https://yourvenue.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Google Maps Link</label>
+                        <input type="url" placeholder="https://maps.google.com/...">
+                        <div class="helper-text">Link to your venue on Google Maps</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Resident Advisor / Eventbrite Profile</label>
+                        <input type="url" placeholder="https://ra.co/clubs/...">
+                    </div>
+                </div>
+
+                <!-- VENUE PARAMETERS & FACILITIES -->
+                <div style="background: #e0e7ff; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">🏗️ Additional Venue Parameters</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Capacity Breakdown - Standing</label>
+                            <input type="number" placeholder="e.g., 300">
+                        </div>
+                        <div class="form-group">
+                            <label>Capacity Breakdown - Seated</label>
+                            <input type="number" placeholder="e.g., 150">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Number of Bathrooms</label>
+                            <input type="number" placeholder="e.g., 4">
+                        </div>
+                        <div class="form-group">
+                            <label>ADA Accessible?</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="fully">Fully accessible</option>
+                                <option value="partially">Partially accessible</option>
+                                <option value="no">Not accessible</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Climate Control</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="full-hvac">Full HVAC system</option>
+                                <option value="ac-only">AC only</option>
+                                <option value="fans">Fans/ventilation</option>
+                                <option value="none">No climate control</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Green Room?</label>
+                            <select>
+                                <option value="">Select option</option>
+                                <option value="private">Private green room</option>
+                                <option value="shared">Shared artist space</option>
+                                <option value="none">No green room</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Load-In Details</label>
+                            <input type="text" placeholder="e.g., Elevator to 2nd floor, then 20ft hallway">
+                        </div>
+                        <div class="form-group">
+                            <label>Loading Dock Door Size</label>
+                            <input type="text" placeholder="e.g., 8' x 10' or Standard door">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nearby Public Transit</label>
+                        <textarea placeholder="e.g., L train (Bedford Ave - 3 min walk), J/M/Z train (Marcy Ave - 5 min walk), B62 bus stop outside"></textarea>
+                    </div>
+                </div>
+
+                <!-- BOOKING PREFERENCES -->
+                <div style="background: #d1fae5; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">⚙️ Booking Preferences</h3>
+                    
+                    <div class="form-group">
+                        <label>Application Fee Preference</label>
+                        <select>
+                            <option value="standard">Standard ($3 per application)</option>
+                            <option value="premium">Premium ($5 - filter for quality applicants)</option>
+                            <option value="free">Free applications (pay $79/month subscription)</option>
+                        </select>
+                        <div class="helper-text">How much should promoters pay to apply?</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preferred Days for Events</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="monday" value="monday">
+                                <label for="monday">Monday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tuesday" value="tuesday">
+                                <label for="tuesday">Tuesday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="wednesday" value="wednesday">
+                                <label for="wednesday">Wednesday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="thursday" value="thursday">
+                                <label for="thursday">Thursday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="friday" value="friday" checked>
+                                <label for="friday">Friday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="saturday" value="saturday" checked>
+                                <label for="saturday">Saturday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sunday" value="sunday">
+                                <label for="sunday">Sunday</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Response Time Commitment</label>
+                        <select>
+                            <option value="">Select timeframe</option>
+                            <option value="24hrs">Within 24 hours</option>
+                            <option value="48hrs">Within 48 hours</option>
+                            <option value="3days">Within 3 days</option>
+                            <option value="7days">Within 7 days (standard)</option>
+                        </select>
+                        <div class="helper-text">How quickly will you respond to applications?</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Minimum Advance Booking</label>
+                        <select>
+                            <option value="">Select timeframe</option>
+                            <option value="1week">1 week minimum</option>
+                            <option value="2weeks">2 weeks minimum</option>
+                            <option value="1month">1 month minimum</option>
+                            <option value="2months">2+ months minimum</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ADDITIONAL NOTES -->
+                <div class="form-group">
+                    <label>Additional Notes for Promoters</label>
+                    <textarea placeholder="Any house rules, special requirements, ideal event types, what you're looking for in partners, etc." rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to VenueLink's Terms of Service and Privacy Policy. I confirm all information and photos are accurate and I have rights to use uploaded media.</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" id="prevBtn" style="display: none;">← Previous</button>
+                <button class="btn btn-primary" id="nextBtn">Next Step →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateStep(step) {
+            // Update content
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector(`.step-content[data-step="${step}"]`).classList.add('active');
+
+            // Update progress
+            document.querySelectorAll('.progress-step').forEach((progressStep, index) => {
+                const stepNum = index + 1;
+                if (stepNum < step) {
+                    progressStep.classList.add('completed');
+                    progressStep.classList.remove('active');
+                    progressStep.querySelector('.progress-circle').innerHTML = '✓';
+                } else if (stepNum === step) {
+                    progressStep.classList.add('active');
+                    progressStep.classList.remove('completed');
+                    progressStep.querySelector('.progress-circle').innerHTML = stepNum;
+                } else {
+                    progressStep.classList.remove('active', 'completed');
+                    progressStep.querySelector('.progress-circle').innerHTML = stepNum;
+                }
+            });
+
+            // Update buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = step === 1 ? 'none' : 'block';
+            nextBtn.textContent = step === totalSteps ? 'Create Venue Profile 🎉' : 'Next Step →';
+
+            currentStep = step;
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                updateStep(currentStep + 1);
+            } else {
+                alert('Venue profile created! Redirecting to dashboard...');
+                // In real app: submit form and redirect
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentStep > 1) {
+                updateStep(currentStep - 1);
+            }
+        });
+    </script>
+</body>
+</html>
