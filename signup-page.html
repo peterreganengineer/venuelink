@@ -407,17 +407,58 @@
 
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
+            // Validate form
+            const inputs = this.querySelectorAll('input[required]');
+            let isValid = true;
+            inputs.forEach(input => {
+                if (!input.value) {
+                    isValid = false;
+                    input.style.borderColor = '#ef4444';
+                } else {
+                    input.style.borderColor = '#27272a';
+                }
+            });
+
+            if (!isValid) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
             const role = document.getElementById('role').value;
-            
+
+            // Store user info in sessionStorage
+            sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('userRole', role);
+            sessionStorage.setItem('userName', this.querySelector('input[type="text"]').value);
+
             // In real app: send to backend, create account
             alert(`Account created as ${role}! Redirecting to profile builder...`);
-            
+
             // Redirect to profile builder
             if (role === 'promoter') {
                 window.location.href = 'promoter-profile-builder.html';
             } else {
                 window.location.href = 'venue-intake-form.html';
+            }
+        });
+
+        // Pre-select role from landing page if set
+        window.addEventListener('load', function() {
+            const selectedRole = sessionStorage.getItem('selectedRole');
+            if (selectedRole) {
+                const roleOptions = document.querySelectorAll('.role-option');
+                roleOptions.forEach(opt => opt.classList.remove('active'));
+
+                if (selectedRole === 'venue') {
+                    roleOptions[1].classList.add('active');
+                    document.getElementById('role').value = 'venue';
+                } else {
+                    roleOptions[0].classList.add('active');
+                    document.getElementById('role').value = 'promoter';
+                }
+
+                sessionStorage.removeItem('selectedRole');
             }
         });
     </script>

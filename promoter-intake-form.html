@@ -740,17 +740,48 @@
 
         document.getElementById('nextBtn').addEventListener('click', () => {
             if (currentStep < totalSteps) {
+                // Validate current step
+                const currentStepEl = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+                const requiredInputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+                let isValid = true;
+
+                requiredInputs.forEach(input => {
+                    if (!input.value) {
+                        isValid = false;
+                        input.style.borderColor = '#ef4444';
+                    } else {
+                        input.style.borderColor = '#e5e7eb';
+                    }
+                });
+
+                if (!isValid) {
+                    alert('Please fill in all required fields before continuing.');
+                    return;
+                }
+
                 updateStep(currentStep + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                alert('Promoter profile created! Redirecting to buy credits and start applying...');
-                // In real app: submit form and redirect
+                sessionStorage.setItem('promoterOnboardingComplete', 'true');
+                alert('🎉 Promoter profile created! Redirecting to browse venues...');
+                setTimeout(() => {
+                    window.location.href = 'marketplace-redesign.html';
+                }, 1000);
             }
         });
 
         document.getElementById('prevBtn').addEventListener('click', () => {
             if (currentStep > 1) {
                 updateStep(currentStep - 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        });
+
+        // Make file upload areas interactive
+        document.querySelectorAll('.file-upload-area').forEach(area => {
+            area.addEventListener('click', function() {
+                alert('File upload functionality would be implemented here.');
+            });
         });
     </script>
 </body>

@@ -497,8 +497,8 @@
         <div class="nav-container">
             <a href="landing-redesign.html" class="logo">VenueLink</a>
             <div class="nav-actions">
-                <a href="#" class="btn btn-outline">Dashboard</a>
-                <a href="#" class="btn btn-primary">List Your Venue</a>
+                <a href="dashboard-redesign.html" class="btn btn-outline">Dashboard</a>
+                <a href="venue-intake-form.html" class="btn btn-primary">List Your Venue</a>
             </div>
         </div>
     </nav>
@@ -605,7 +605,7 @@
                 </div>
             </div>
 
-            <button class="clear-filters">Clear All Filters</button>
+            <button class="clear-filters" onclick="clearAllFilters()">Clear All Filters</button>
         </aside>
 
         <main>
@@ -623,7 +623,7 @@
 
             <div class="venue-grid">
                 <!-- Venue Card 1 -->
-                <div class="venue-card" onclick="window.location.href='venue-profile.html'">
+                <div class="venue-card" onclick="window.location.href='venue-profile-redesign.html'">
                     <div class="venue-image">
                         <div class="verified-badge">✓ Verified</div>
                         <div class="quick-stats">
@@ -840,5 +840,65 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Search functionality
+        document.querySelector('.search-box button').addEventListener('click', performSearch);
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        function performSearch() {
+            const searchTerm = document.querySelector('.search-box input').value;
+            console.log('Searching for:', searchTerm);
+            // In real app: filter venues based on search
+            alert(`Searching for: ${searchTerm}`);
+        }
+
+        // Filter functionality
+        function clearAllFilters() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelector('.range-slider').value = 500;
+            alert('All filters cleared!');
+        }
+
+        // Apply filters when checkboxes change
+        document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+
+        document.querySelector('.range-slider').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const selectedFilters = {
+                locations: [],
+                genres: [],
+                equipment: [],
+                capacity: document.querySelector('.range-slider').value
+            };
+
+            document.querySelectorAll('#brooklyn:checked, #manhattan:checked, #queens:checked, #bronx:checked').forEach(cb => {
+                selectedFilters.locations.push(cb.id);
+            });
+
+            document.querySelectorAll('#house-filter:checked, #techno-filter:checked, #hiphop-filter:checked, #rock-filter:checked').forEach(cb => {
+                selectedFilters.genres.push(cb.id);
+            });
+
+            console.log('Filters applied:', selectedFilters);
+            // In real app: filter venues based on selected filters
+        }
+
+        // Sort dropdown
+        document.querySelector('.sort-dropdown').addEventListener('change', function() {
+            console.log('Sorting by:', this.value);
+            // In real app: re-sort venues
+        });
+
+        // Make venue cards clickable
+        document.querySelectorAll('.venue-card').forEach(card => {
+            card.style.cursor = 'pointer';
+        });
+    </script>
 </body>
 </html>

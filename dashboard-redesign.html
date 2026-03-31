@@ -844,13 +844,13 @@
 </head>
 <body>
     <nav class="top-nav">
-        <div class="logo">VenueLink</div>
+        <a href="landing-redesign.html" class="logo" style="cursor: pointer; text-decoration: none;">VenueLink</a>
         <div class="user-menu">
-            <div class="notifications">
+            <div class="notifications" onclick="alert('Notifications: 5 new applications pending review')">
                 🔔
                 <span class="notification-badge">5</span>
             </div>
-            <div class="user-avatar">TB</div>
+            <div class="user-avatar" onclick="toggleUserMenu()" style="cursor: pointer;">TB</div>
         </div>
     </nav>
 
@@ -859,27 +859,27 @@
             <div class="sidebar-section">
                 <div class="sidebar-label">Overview</div>
                 <nav class="sidebar-nav">
-                    <a href="#" class="sidebar-item active">
+                    <a href="dashboard-redesign.html" class="sidebar-item active">
                         <div class="sidebar-item-left">
                             <span>📥</span>
                             <span>Applications</span>
                         </div>
                         <span class="badge">12</span>
                     </a>
-                    <a href="#" class="sidebar-item">
+                    <a href="#" class="sidebar-item" onclick="alert('Accepted applications view coming soon!')">
                         <div class="sidebar-item-left">
                             <span>✓</span>
                             <span>Accepted</span>
                         </div>
                         <span>8</span>
                     </a>
-                    <a href="#" class="sidebar-item">
+                    <a href="#" class="sidebar-item" onclick="alert('Calendar view coming soon!')">
                         <div class="sidebar-item-left">
                             <span>📅</span>
                             <span>Calendar</span>
                         </div>
                     </a>
-                    <a href="#" class="sidebar-item">
+                    <a href="#" class="sidebar-item" onclick="alert('Messages feature coming soon!')">
                         <div class="sidebar-item-left">
                             <span>💬</span>
                             <span>Messages</span>
@@ -892,19 +892,19 @@
             <div class="sidebar-section">
                 <div class="sidebar-label">Venue</div>
                 <nav class="sidebar-nav">
-                    <a href="#" class="sidebar-item">
+                    <a href="venue-profile-redesign.html" class="sidebar-item">
                         <div class="sidebar-item-left">
                             <span>🏠</span>
                             <span>My Profile</span>
                         </div>
                     </a>
-                    <a href="#" class="sidebar-item">
+                    <a href="#" class="sidebar-item" onclick="alert('Analytics dashboard coming soon!')">
                         <div class="sidebar-item-left">
                             <span>📊</span>
                             <span>Analytics</span>
                         </div>
                     </a>
-                    <a href="#" class="sidebar-item">
+                    <a href="#" class="sidebar-item" onclick="alert('Settings page coming soon!')">
                         <div class="sidebar-item-left">
                             <span>⚙️</span>
                             <span>Settings</span>
@@ -1132,9 +1132,9 @@
                             Application fee: <strong>$3</strong> • Applied 2 hours ago
                         </div>
                         <div class="action-buttons">
-                            <button class="btn btn-secondary">View Full Profile</button>
+                            <button class="btn btn-secondary" onclick="viewPromoterProfile()">View Full Profile</button>
                             <button class="btn btn-decline">✗ Decline</button>
-                            <button class="btn btn-accept">✓ Accept Application</button>
+                            <button class="btn btn-accept" onclick="acceptApplication()">✓ Accept Application</button>
                         </div>
                     </div>
                 </div>
@@ -1242,9 +1242,9 @@
                             Application fee: <strong>$3</strong> • Applied 1 day ago
                         </div>
                         <div class="action-buttons">
-                            <button class="btn btn-secondary">View Full Profile</button>
+                            <button class="btn btn-secondary" onclick="viewPromoterProfile()">View Full Profile</button>
                             <button class="btn btn-decline">✗ Decline</button>
-                            <button class="btn btn-accept">✓ Accept Application</button>
+                            <button class="btn btn-accept" onclick="acceptApplication()">✓ Accept Application</button>
                         </div>
                     </div>
                 </div>
@@ -1352,9 +1352,9 @@
                             Application fee: <strong>$3</strong> • Applied 3 days ago
                         </div>
                         <div class="action-buttons">
-                            <button class="btn btn-secondary">View Full Profile</button>
+                            <button class="btn btn-secondary" onclick="viewPromoterProfile()">View Full Profile</button>
                             <button class="btn btn-decline">✗ Decline</button>
-                            <button class="btn btn-accept">✓ Accept Application</button>
+                            <button class="btn btn-accept" onclick="acceptApplication()">✓ Accept Application</button>
                         </div>
                     </div>
                 </div>
@@ -1435,7 +1435,10 @@
 
         // Add click handlers to all decline buttons
         document.querySelectorAll('.btn-decline').forEach(btn => {
-            btn.addEventListener('click', openDeclineModal);
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openDeclineModal();
+            });
         });
 
         // Close modal when clicking outside
@@ -1443,6 +1446,30 @@
             if (e.target === this) {
                 closeDeclineModal();
             }
+        });
+
+        function acceptApplication() {
+            if (confirm('Accept this application from Brooklyn Bass Collective?')) {
+                alert('Application accepted! The promoter has been notified.');
+                // In real app: send to backend
+            }
+        }
+
+        function viewPromoterProfile() {
+            window.location.href = 'promoter-profile-page.html';
+        }
+
+        function toggleUserMenu() {
+            alert('User menu:\n- My Profile\n- Settings\n- Log Out');
+        }
+
+        // Filter tabs functionality
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                console.log('Filter:', this.textContent);
+            });
         });
     </script>
 </body>

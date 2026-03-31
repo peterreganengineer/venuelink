@@ -541,10 +541,10 @@
             <div class="logo">VenueLink</div>
             <div class="nav-links">
                 <a href="#features">Features</a>
-                <a href="#venues">Browse Venues</a>
+                <a href="marketplace-redesign.html">Browse Venues</a>
                 <a href="#pricing">Pricing</a>
-                <a href="marketplace.html" class="btn btn-outline">Explore</a>
-                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="marketplace-redesign.html" class="btn btn-outline">Explore</a>
+                <a href="signup-page.html" class="btn btn-primary">Get Started</a>
             </div>
         </div>
     </nav>
@@ -560,8 +560,8 @@
                 No more ghosted emails or scheduling nightmares.
             </p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-primary">I'm a Venue</a>
-                <a href="#" class="btn btn-outline">I'm a Promoter</a>
+                <a href="signup-page.html" class="btn btn-primary" onclick="setRole('venue')">I'm a Venue</a>
+                <a href="signup-page.html" class="btn btn-outline" onclick="setRole('promoter')">I'm a Promoter</a>
             </div>
         </div>
     </section>
@@ -638,11 +638,11 @@
         <div class="section-container">
             <div class="venues-header">
                 <h2>Top Venues For You</h2>
-                <a href="marketplace.html" class="view-all-link">View all venues →</a>
+                <a href="marketplace-redesign.html" class="view-all-link">View all venues →</a>
             </div>
 
             <div class="venue-cards">
-                <div class="venue-card" onclick="window.location.href='venue-profile.html'">
+                <div class="venue-card" onclick="window.location.href='venue-profile-redesign.html'">
                     <div class="venue-image">
                         <div class="verified-badge">✓ Verified</div>
                     </div>
@@ -739,7 +739,7 @@
         <div class="cta-content">
             <h2>Ready to Fill Your Calendar?</h2>
             <p>Join hundreds of venues and promoters already booking smarter</p>
-            <a href="#" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Get Started Free</a>
+            <a href="signup-page.html" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Get Started Free</a>
         </div>
     </section>
 
@@ -757,5 +757,20 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Store selected role in sessionStorage for signup page
+        function setRole(role) {
+            sessionStorage.setItem('selectedRole', role);
+        }
+
+        // Make apply buttons functional
+        document.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent card click
+                window.location.href = 'signup-page.html';
+            });
+        });
+    </script>
 </body>
 </html>

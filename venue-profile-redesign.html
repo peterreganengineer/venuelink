@@ -530,10 +530,10 @@
                 <div class="apply-details">
                     Guaranteed response within 7 days or full refund
                 </div>
-                <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;" onclick="applyToVenue()">
                     Apply to Book
                 </button>
-                <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" onclick="saveVenue()">
                     Save Venue
                 </button>
 
@@ -810,5 +810,46 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function applyToVenue() {
+            // Check if user is logged in
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                alert('Please sign up or log in to apply to this venue');
+                window.location.href = 'signup-page.html';
+            } else {
+                alert('Application form coming soon! In the full app, this would open an application modal.');
+            }
+        }
+
+        function saveVenue() {
+            const saved = localStorage.getItem('savedVenues') || '[]';
+            const savedVenues = JSON.parse(saved);
+            savedVenues.push('The Basement NYC');
+            localStorage.setItem('savedVenues', JSON.stringify(savedVenues));
+            alert('Venue saved! You can view your saved venues in your dashboard.');
+        }
+
+        // Calendar day selection
+        document.querySelectorAll('.calendar-day.available').forEach(day => {
+            day.addEventListener('click', function() {
+                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                this.classList.add('selected');
+                this.style.background = '#fbbf24';
+                this.style.color = '#0a0a0a';
+                console.log('Selected date:', this.textContent);
+            });
+        });
+
+        // Month navigation
+        document.querySelectorAll('.calendar-nav button').forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                const direction = index === 0 ? 'previous' : 'next';
+                console.log(`Navigating to ${direction} month`);
+                alert(`Calendar navigation: ${direction} month`);
+            });
+        });
+    </script>
 </body>
 </html>
